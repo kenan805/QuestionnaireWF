@@ -36,10 +36,6 @@ namespace QuestionnaireWF
             user.Email = textBoxEmail.Text;
         }
 
-        private void MaskedTextBoxPhone_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
-        {
-
-        }
 
         private void DateTimePickerBirthdate_ValueChanged(object sender, EventArgs e)
         {
@@ -51,7 +47,7 @@ namespace QuestionnaireWF
             if (groupBox_Anket.Controls.OfType<TextBox>().Any(tb => string.IsNullOrEmpty(tb.Text))
                 || !maskedTextBoxPhone.MaskCompleted)
             {
-                var dialog = MessageBox.Show("Fill in the blanks!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show("Fill in the blanks!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else if (btnAdd.Text == "Add")
             {
@@ -59,8 +55,21 @@ namespace QuestionnaireWF
             }
             else if (btnAdd.Text == "Change")
             {
-                listBox1.Items.Add(user);
-                MessageBox.Show("Changed is successfully!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                var selectPerson = (listBox1.SelectedItem as Person);
+                File.Delete(selectPerson.Name + ".json");
+                var index = listBox1.SelectedIndex;
+                if (selectPerson != null)
+                {
+                    selectPerson.Name = textBoxName.Text;
+                    selectPerson.Surname = textBoxSurname.Text;
+                    selectPerson.Email = textBoxEmail.Text;
+                    selectPerson.Phone = maskedTextBoxPhone.Text;
+                    selectPerson.BirthDate = dateTimePickerBirthdate.Value;
+                    listBox1.Items.Remove(selectPerson);
+                    listBox1.Items.Insert(index, selectPerson);
+                    btnAdd.Text = "Change";
+                    MessageBox.Show("Changed is successfully!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
         }
 
@@ -69,15 +78,23 @@ namespace QuestionnaireWF
             btnAdd.Text = "Add";
             if (!string.IsNullOrWhiteSpace(textBoxFilename.Text))
             {
-                var options = new JsonSerializerOptions();
-                options.WriteIndented = true;
-                options.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
-                var textJson = JsonSerializer.Serialize(user, options);
-                File.WriteAllText(textBoxFilename.Text + ".json", textJson);
-                MessageBox.Show("The questionnaire was completed successfully!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                groupBox_Anket.Controls.OfType<TextBox>().ToList().ForEach(tb => tb.Text = string.Empty);
-                maskedTextBoxPhone.Text = string.Empty;
-                dateTimePickerBirthdate.Value = DateTime.Now;
+                if (groupBox_Anket.Controls.OfType<TextBox>().Any(tb => string.IsNullOrEmpty(tb.Text))
+                || !maskedTextBoxPhone.MaskCompleted)
+                {
+                    MessageBox.Show("Fill in the blanks!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+                else
+                {
+                    var options = new JsonSerializerOptions();
+                    options.WriteIndented = true;
+                    options.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+                    var textJson = JsonSerializer.Serialize(user, options);
+                    File.WriteAllText(textBoxFilename.Text + ".json", textJson);
+                    MessageBox.Show("The questionnaire was completed successfully!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    groupBox_Anket.Controls.OfType<TextBox>().ToList().ForEach(tb => tb.Text = string.Empty);
+                    maskedTextBoxPhone.Text = string.Empty;
+                    dateTimePickerBirthdate.Value = DateTime.Now;
+                }
             }
             else
                 MessageBox.Show("File name is empty!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -128,20 +145,10 @@ namespace QuestionnaireWF
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
+        private void Form1_Load(object sender, EventArgs e) => listBox1.DisplayMember = "Name";
 
-            listBox1.DisplayMember = "Name";
-        }
+        private void MaskedTextBoxPhone_TextChanged(object sender, EventArgs e) => user.Phone = maskedTextBoxPhone.Text;
 
-        private void MaskedTextBoxPhone_TextChanged(object sender, EventArgs e)
-        {
-            user.Phone = maskedTextBoxPhone.Text;
-        }
-
-        private void BtnListBoxClear_Click(object sender, EventArgs e)
-        {
-            listBox1.Items.Clear();
-        }
+        private void BtnListBoxClear_Click(object sender, EventArgs e) => listBox1.Items.Clear();
     }
 }
