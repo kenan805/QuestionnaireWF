@@ -1,7 +1,7 @@
 ﻿
 namespace QuestionnaireWF
 {
-    partial class Form1
+    partial class Anket
     {
         /// <summary>
         /// Required designer variable.
@@ -29,6 +29,7 @@ namespace QuestionnaireWF
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Anket));
             this.label6 = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnLoad = new System.Windows.Forms.Button();
@@ -292,7 +293,7 @@ namespace QuestionnaireWF
             this.btnListBoxClear.UseVisualStyleBackColor = true;
             this.btnListBoxClear.Click += new System.EventHandler(this.BtnListBoxClear_Click);
             // 
-            // Form1
+            // Anket
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -307,8 +308,9 @@ namespace QuestionnaireWF
             this.Controls.Add(this.textBoxFilename);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.groupBox_Anket);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(1330, 730);
-            this.Name = "Form1";
+            this.Name = "Anket";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox_Anket.ResumeLayout(false);

@@ -12,11 +12,11 @@ using System.Windows.Forms;
 
 namespace QuestionnaireWF
 {
-    public partial class Form1 : Form
+    public partial class Anket : Form
     {
         Person user = new Person();
 
-        public Form1()
+        public Anket()
         {
             InitializeComponent();
         }
